@@ -9,18 +9,36 @@ class LoginPage:
     PASSWORD_FILED_LOCATOR = (By.ID, "password-input")
     LOGIN_BUTTON_LOCATOR = (By.ID, "submit-button")
     ERROR_MESSAGE_LOCATOR = (By.ID, "error-message")
-    url = "https://qa-guru.github.io/one-page-form/login.html"
-    driver = None
 
-    def __init__(self, driver, url):
-        self.driver = driver
+
+    def __init__(self, browser_name, url): #Рефакторинг 1 - изменение метода инициализации
+        self.browser_name = browser_name.lower()
         self.url = url
+        self.driver = None
 
-    def set_up_test(self):
-        self.driver = webdriver.Chrome()
+    # def __init__(self, driver, url):
+    #     self.driver = driver
+    #     self.url = url
+
+    def set_up_test(self):  #Рефакторинг 01 - изменение метода на роботу с разными браузерами
+        if self.browser_name == "chrome":
+            self.driver = webdriver.Chrome()
+        elif self.browser_name == "firefox":
+            self.driver = webdriver.Firefox()
+        elif self.browser_name == "edge":
+            self.driver = webdriver.Edge()
+        else:
+            raise ValueError(
+                f"\"self.browser_name\" может быть \"chrome\", \"firefox\" или \"edge\". У вас: {self.browser_name}")
         self.driver.get(self.url)
         self.driver.maximize_window()
         time.sleep(3)
+
+    #def set_up_test(self):
+    #   self.driver = webdriver.Chrome()
+    #   self.driver.get(self.url)
+    #   self.driver.maximize_window()
+    #   time.sleep(3)
 
     def tear_down_test(self):
         if self.driver:
@@ -143,7 +161,10 @@ class LoginPage:
         finally:
             self.tear_down_test()
 
-login_page = LoginPage(LoginPage.driver, LoginPage.url)
+
+url = "https://qa-guru.github.io/one-page-form/login.html"
+browser_name = "chrome"
+login_page = LoginPage(browser_name, url)
 login_page.test_case_01()
 login_page.test_case_02()
 login_page.test_case_03()
