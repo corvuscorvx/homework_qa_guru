@@ -16,6 +16,9 @@ class StudentForm:
     FIRST_NAME = (By.ID, "firstName")
     USER_EMAIL = (By.ID, "userEmail")
     MOBILE_NUMBER = (By.ID, "userNumber")
+    BUTTON_SUBMIT = (By.ID, "submit")
+    PICTURE = (By.ID, "uploadPicture")
+    CURRENT_ADDRESS = (By.ID, "currentAddress")
 
     GENDER_MALE_LABEL = (By.CSS_SELECTOR, "label[for='gender-radio-1']")
     GENDER_OTHER_LABEL = (By.CSS_SELECTOR, "label[for='gender-radio-3']")
@@ -24,12 +27,16 @@ class StudentForm:
     GENDER_OTHER_INPUT = (By.ID, "gender-radio-3")
     GENDER_FEMALE_INPUT = (By.ID, "gender-radio-2")
 
+    HOBBIES_SPORTS_LABEL = (By.CSS_SELECTOR, "label[for='hobbies-checkbox-1']")
+    HOBBIES_READING_LABEL = (By.CSS_SELECTOR, "label[for='hobbies-checkbox-2']")
+    HOBBIES_MUSIC_LABEL = (By.CSS_SELECTOR, "label[for='hobbies-checkbox-3']")
+    HOBBIES_SPORTS_INPUT = (By.ID, "hobbies-checkbox-1")
+    HOBBIES_READING_INPUT = (By.ID, "hobbies-checkbox-2")
+    HOBBIES_MUSIC_INPUT = (By.ID, "hobbies-checkbox-3")
+
     # HOBBIES_READING = (By.ID, "hobbies-checkbox-2")
     # SUBJECTS_DROPDOWN = (By.ID, "subjectsDropdown")
-    # CURRENT_ADDRESS = (By.ID, "currentAddress")
-    # BUTTON_SUBMIT = (By.ID, "submit")
     # STATE = (By.ID, "state")
-    # PICTURE = (By.ID, "uploadPicture")
 
     def __init__(self, url, driver):
         self.url = url
@@ -116,6 +123,44 @@ class StudentForm:
         expected_subject = "Physics"
         assert subject_chip_text == expected_subject, f"Ошибка! Ожидали предмет '{expected_subject}', "f"но отображается '{subject_chip_text}'"
 
+    def pick_hobbies(self, hobbies_list):
+        assert 0 <= len(hobbies_list) <= 3, f"Можно выбрать максимум три хобби"
+        for label_locator, input_locator in hobbies_list:
+            actual_hobbies = self.wait.until(EC.element_to_be_clickable(label_locator))
+            actual_hobbies.click()
+            actual_hobbies_input = self.wait.until(EC.presence_of_element_located(input_locator))
+            assert actual_hobbies_input.is_selected() == True, f"Чекбокс {input_locator} не выбрался"
+
+    def use_scroll_to_submit_button(self):
+        submit_button = self.driver.find_element(By.ID, "submit")
+        self.driver.execute_script("arguments[0].scrollIntoView();", submit_button)
+
+    @staticmethod
+    def create_file():
+        temp_file_path = os.path.abspath("test_image.jpg")
+        with open(temp_file_path, "w") as f:
+            f.write("fake image data")
+        return temp_file_path
+
+    def upload_file(self, temp_file_path):
+        upload_input = self.driver.find_element(*self.PICTURE)
+        upload_input.send_keys(temp_file_path)
+
+    @staticmethod
+    def delite_file():
+        if os.path.exists("test_image.jpg"):
+            os.remove("test_image.jpg")
+
+    def input_current_address(self):
+        actual_current_address = self.driver.find_element(*self.CURRENT_ADDRESS)
+        actual_current_address.send_keys("Полагаю, что это временный адрес!")
+        current_address_value = actual_current_address.get_attribute("value")
+        assert current_address_value == "Полагаю, что это временный адрес!", f"Не совпадает! Получили: '{current_address_value}'"
+
+
+
+
+
 
     def test01(self):
         self.set_up_test()
@@ -151,6 +196,25 @@ class StudentForm:
 
         self.pick_subjects()
         print("Тест прошел успешно.")
+
+        hobbies_list = [
+            (self.HOBBIES_SPORTS_LABEL, self.HOBBIES_SPORTS_INPUT),
+            (self.HOBBIES_READING_LABEL, self.HOBBIES_READING_INPUT)
+        ]
+        self.pick_hobbies(hobbies_list)
+        print("Тест прошел успешно.")
+
+        self.use_scroll_to_submit_button()
+        print("Страница прокручена до кнопки отправки формы.")
+
+        temp_file = self.create_file()
+        self.upload_file(temp_file)
+        print("Тест пройден. Файл создан и загружен.")
+
+        self.input_current_address()
+        print("Тест пройден. Адрес указан!")
+
+
 
 url = "https://qa-guru.github.io/one-page-form/automation-practice-form.html"
 driver = webdriver.Chrome()
