@@ -351,7 +351,6 @@ class StudentForm:
         self.tear_down_test()
         print("Драйвер выключен.")
 
-
 my_url = "https://qa-guru.github.io/one-page-form/automation-practice-form.html"
 browser = webdriver.Chrome()
 student_form = StudentForm(my_url, browser)
