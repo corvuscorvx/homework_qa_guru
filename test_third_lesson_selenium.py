@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -24,9 +25,6 @@ class StudentForm:
     GENDER_MALE_LABEL = (By.CSS_SELECTOR, "label[for='gender-radio-1']")
     GENDER_OTHER_LABEL = (By.CSS_SELECTOR, "label[for='gender-radio-3']")
     GENDER_FEMALE_LABEL = (By.CSS_SELECTOR, "label[for='gender-radio-2']")
-    GENDER_MALE_INPUT = (By.CSS_SELECTOR, "#gender-radio-1")
-    GENDER_OTHER_INPUT = (By.CSS_SELECTOR, "#gender-radio-3")
-    GENDER_FEMALE_INPUT = (By.CSS_SELECTOR, "#gender-radio-2")
     # Локаторы хобби
     HOBBIES_MUSIC_LABEL = (By.CSS_SELECTOR, "label[for='hobbies-checkbox-3']")
     HOBBIES_SPORTS_LABEL = (By.CSS_SELECTOR, "label[for='hobbies-checkbox-1']")
@@ -109,14 +107,13 @@ class StudentForm:
         )
 
     # Выбрать гендер
-    def select_gender(self, label_locator, input_locator):
+    def select_gender(self, label_locator):
         actual_gender = self.wait.until(
             ec.element_to_be_clickable(label_locator)
         )
+        gender_text = actual_gender.text
         actual_gender.click()
-        actual_gender_input = self.wait.until(
-            ec.presence_of_element_located(input_locator)
-        )
+        return gender_text
 
     # Ввести номер
     def input_number(self, number):
@@ -177,17 +174,20 @@ class StudentForm:
             ec.visibility_of_element_located((By.CSS_SELECTOR, 'span[class="subjects-chip__label"]'))
         )
         subject_chip_text = subject_chip.text
-        expected_subject = subject.capitalize()
-        assert subject_chip_text == expected_subject, \
-            f"Ошибка! Ожидали предмет '{expected_subject}', "f"но отображается '{subject_chip_text}'"
+        return subject_chip_text
+
 
     # Выбрать хобби
     def select_hobbies(self, hobbies_list):
+        hobbies_texts = []
         for hobby in hobbies_list:
-            self.wait.until(
+            actual_hobbies = self.wait.until(
                 ec.element_to_be_clickable((
-                    By.CSS_SELECTOR, f"label[for='hobbies-checkbox-{hobby}']"))
-            ).click()
+                    By.ID, f"hobbies-checkbox-{hobby}"))
+            )
+            hobbies_texts.append(actual_hobbies.text)
+            actual_hobbies.click()
+        return ", ".join(hobbies_texts)
 
     # Скролл
     def scroll(self):
@@ -205,7 +205,9 @@ class StudentForm:
     # Загрузка временного файла
     def upload_file(self, temp_file_path):
         upload_input = self.driver.find_element(*self.PICTURE)
+        file_text = upload_input.text
         upload_input.send_keys(temp_file_path)
+        return file_text
 
     # Удаление временного файла
     @staticmethod
@@ -230,7 +232,9 @@ class StudentForm:
         state_option = self.wait.until(
             ec.element_to_be_clickable((By.XPATH, f'//*[@id="stateCity-wrapper"]/div[{state_value}]'))
         )
+        state_option_text = state_option.text
         state_option.click()
+        return state_option_text
 
     # Выбрать город
     def select_city(self, city_value):
@@ -239,7 +243,9 @@ class StudentForm:
         city_option = self.wait.until(
             ec.element_to_be_clickable((By.XPATH, f'//*[@id="stateCity-wrapper"]/div[{city_value}]'))
         )
+        city_option_text = city_option.text
         city_option.click()
+        return city_option_text
 
     # Нажать кнопку
     def click_submit_button(self):
@@ -247,15 +253,45 @@ class StudentForm:
         self.driver.execute_script("arguments[0].click();", submit_button)
 
     # Отображение окна с результатами
-    def check_result_modal(self):
+    def check_result_modal(self, first_name, last_name, email, gender_text, number, subject, hobbies, file,
+                           current_address, state, city):
         modal_title = self.wait.until(
             ec.visibility_of_element_located(self.MODAL_DIALOG)
         )
         assert modal_title.text == "Thanks for submitting the form", (
             f"Заголовок модального окна не совпадает! Получили: '{modal_title.text}'"
         )
+        result_table = self.wait.until(
+            ec.visibility_of_element_located(self.MODAL_DIALOG_RESULT)
+        )
+        assert first_name in result_table.text, f"Имя {first_name} не найдено."
+        assert last_name in result_table.text, f"Фамилия {last_name} не найдена."
+        assert email in result_table.text, f"Почта {email} не найдена."
+        assert gender_text in result_table.text, f"Гендер {gender_text} не найден."
+        assert number in result_table.text, f"Телефон {number} не найден."
+        assert subject in result_table.text, f"Предмет {subject} не найден."
+        assert hobbies in result_table.text, f"Хобби {hobbies} не найдено."
+        assert file in result_table.text, f"Файл {file} не найден."
+        assert current_address in result_table.text, f"Адрес {current_address} не найден."
+        assert state in result_table.text, f"Штат {state} не найден."
+        assert city in result_table.text, f"Город {city} не найден."
 
     def test01(self):
+        first_name = "Автомат"
+        last_name = "Автоматов"
+        email = "Avtomat@pitonov.com"
+        gender_locator = self.GENDER_MALE_LABEL
+        number = "9123456780"
+        birth_day = 11
+        birth_month = 12
+        birth_year = 1999
+        subjects = "maths"
+        hobbies_list = [1, 2]
+        temp_file = self.create_file()
+        current_address = "Полагаю, что это временный адрес!"
+        state_value = 2
+        city_value = 2
+
         self.set_up_test()
 
         actual_title = self.get_title()
@@ -268,50 +304,53 @@ class StudentForm:
         self.close_banner()
         print("Окно закрыто!")
 
-        self.input_first_name("Автомат")
-        self.input_last_name("Автоматов")
+        self.input_first_name(first_name)
+        self.input_last_name(last_name)
         print("Имя и фамилия заполнены!")
 
-        self.input_email("Avtomat@pitonov.com")
+        self.input_email(email)
         print("Email заполнен!")
 
-        self.select_gender(self.GENDER_FEMALE_LABEL, self.GENDER_FEMALE_INPUT)
+        gender = self.select_gender(gender_locator)
         print("Гендер выбран!")
 
-        self.input_number("9123456780")
+        self.input_number(number)
         print("Номер введен!")
 
-        self.input_date_of_birth(1, 4, 1990)
+        self.input_date_of_birth(birth_day, birth_month, birth_year)
         print("Дата рождения введена!")
 
-        self.input_subjects("maths")
+        subject = self.input_subjects(subjects)
         print("Объект выбран!")
 
-        hobbies_list = [1, 2]
-        self.select_hobbies(hobbies_list)
+        hobbies = self.select_hobbies(hobbies_list)
         print("Хобби выбраны!")
+        time.sleep(2)
 
         self.scroll()
         print("Страница прокручена до подвала!")
 
-        temp_file = self.create_file()
-        self.upload_file(temp_file)
+        file = self.upload_file(temp_file)
         print("Файл создан и загружен!")
 
-        self.input_current_address("Полагаю, что это временный адрес!")
+        self.input_current_address(current_address)
         print("Адрес указан!")
 
-        self.select_state(1)
-        self.select_city(1)
+        state = self.select_state(state_value)
+        city = self.select_city(city_value)
         print("Штат и город выбраны!")
 
         self.click_submit_button()
         print("Кнопка нажата.")
 
+        self.check_result_modal(first_name, last_name, email, gender, number, subject, hobbies, file, current_address,
+                                state, city)
+
         self.delete_file()
         print("Временный файл удален.")
         self.tear_down_test()
         print("Драйвер выключен.")
+
 
 my_url = "https://qa-guru.github.io/one-page-form/automation-practice-form.html"
 browser = webdriver.Chrome()
