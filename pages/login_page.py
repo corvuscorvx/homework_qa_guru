@@ -1,7 +1,7 @@
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 
-
+# TODO: добавить тайпинги
 class LoginPage(BasePage):
 
     URL = "https://qa-guru.github.io/one-page-form/login.html"
@@ -12,7 +12,7 @@ class LoginPage(BasePage):
 
     ERROR_MESSAGE = (By.CSS_SELECTOR, "#error-message")
 
-    def __init__(self, driver):
+    def __init__(self, driver): # Удалить
         super().__init__(driver)
 
     def login(self, username, password):
