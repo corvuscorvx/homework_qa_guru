@@ -8,9 +8,11 @@ from pages.registration_page import RegistrationPage
 
 @pytest.fixture(scope="function")
 def driver():
-    browser = webdriver.Chrome()
-    yield browser
-    browser.quit()
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+    driver.implicitly_wait(5)
+    yield driver
+    driver.quit()
 
 
 @pytest.fixture(scope="function")

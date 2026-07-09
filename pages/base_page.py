@@ -16,13 +16,17 @@ class BasePage:
         self.driver.get(url)
         self.driver.maximize_window()
 
-    def wait_for_element(self, locator: Tuple[str, str]):
+    def wait_for_element_visible(self, locator: Tuple[str, str]):
         """Ожидание появления элемента на странице"""
         return self.wait.until(ec.visibility_of_element_located(locator))
 
     def wait_for_element_clickable(self, locator: Tuple[str, str]):
         """Ожидание пока элемента станет кликабельным"""
         return self.wait.until(ec.element_to_be_clickable(locator))
+
+    def wait_for_element_text(self, locator: Tuple[str, str], text: str) -> bool:
+        """Возвращает текст элемента"""
+        return self.wait.until(ec.text_to_be_present_in_element(locator, text))
 
     def click_element(self, locator: Tuple[str, str]):
         """Ожидание кликабельности элемента и клик по нему"""
@@ -37,21 +41,18 @@ class BasePage:
 
     def get_element_text(self, locator: Tuple[str, str]) -> str:
         """Ожидание видимости элемента и возврщение его текста"""
-        element = self.wait_for_element(locator)
+        element = self.wait_for_element_visible(locator)
         return element.text
 
     def get_element_attribute(self, locator: Tuple[str, str], attribute_name: str = "value"):
         """Ожидание видимости элемента и возвращение его атрибута"""
-        element = self.wait_for_element(locator)
+        element = self.wait_for_element_visible(locator)
         return element.get_attribute(attribute_name)
 
     def get_validation_message(self, locator: Tuple[str, str]):
         """Получить текст валидации браузера для поля"""
-        element = self.wait_for_element(locator)
-        return self.driver.execute_script(
-            "return arguments[0].validationMessage;",
-            element
-        )
+        element = self.wait_for_element_visible(locator)
+        return self.driver.execute_script("return arguments[0].validationMessage;",element)
 
     def scroll_to_footer(self):
         """Прокрутить страницу вниз до футера и скрыть его"""
