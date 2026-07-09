@@ -57,6 +57,7 @@ def test_email_without_username(text_box_page):
 def test_email_without_at(text_box_page):
     email = "Avtomatmail.com"
     validation_message = 'Адрес электронной почты должен содержать символ "@"'
+
     text_box_page.open_mine_url()
     text_box_page.input_email(email)
     text_box_page.click_submit_button()
