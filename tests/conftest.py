@@ -37,7 +37,7 @@ def temp_test_file():
     with open(temp_file_path, "w", encoding="utf-8") as f:
         f.write("fake image data")
 
-    yield temp_file_path
+    yield temp_file_path, file_name
 
     if os.path.exists(temp_file_path):
         os.remove(temp_file_path)
