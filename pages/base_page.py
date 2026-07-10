@@ -2,6 +2,7 @@ from typing import Tuple
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from pages.elements.calendar import Calendar
 
 
 class BasePage:
@@ -10,6 +11,7 @@ class BasePage:
         self.driver = driver
         self.default_timeout = 10
         self.wait = WebDriverWait(self.driver, self.default_timeout)
+        self.calendar = Calendar(self)
 
     def open_url(self, url: str):
         """Открыть урл и развернуть окно на весь экран"""
