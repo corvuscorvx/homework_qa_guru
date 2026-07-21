@@ -2,7 +2,6 @@ from typing import Tuple
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-from pages.elements.calendar import Calendar
 
 
 class BasePage:
@@ -11,7 +10,6 @@ class BasePage:
         self.driver = driver
         self.default_timeout = 10
         self.wait = WebDriverWait(self.driver, self.default_timeout)
-        self.calendar = Calendar(self)
 
     def open_url(self, url: str):
         """Открыть урл и развернуть окно на весь экран"""
@@ -54,7 +52,7 @@ class BasePage:
     def get_validation_message(self, locator: Tuple[str, str]):
         """Получить текст валидации браузера для поля"""
         element = self.wait_for_element_visible(locator)
-        return self.driver.execute_script("return arguments[0].validationMessage;",element)
+        return self.driver.execute_script("return arguments[0].validationMessage;", element)
 
     def scroll_to_footer(self):
         """Прокрутить страницу вниз до футера и скрыть его"""

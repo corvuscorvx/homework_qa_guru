@@ -1,19 +1,14 @@
-from pages.base_page import BasePage
+from page_object.pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 
 
 class TextBoxPage(BasePage):
-    URL = "https://qa-guru.github.io/one-page-form/text-box.html"
-
     EMAIL = (By.CSS_SELECTOR, "#userEmail")
     FULL_NAME = (By.CSS_SELECTOR, "#userName")
     OUTPUT_AREA = (By.CSS_SELECTOR, "#output")
     SUBMIT_BUTTON = (By.CSS_SELECTOR, "#submit")
     CURRENT_ADDRESS = (By.CSS_SELECTOR, "#currentAddress")
     PERMANENT_ADDRESS = (By.CSS_SELECTOR, "#permanentAddress")
-
-    def open_mine_url(self):
-        self.open_url(self.URL)
 
     def input_full_name(self, full_name: str):
         self.input_text(self.FULL_NAME, full_name)
