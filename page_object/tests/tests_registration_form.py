@@ -1,5 +1,5 @@
 from random import randint
-from tests.conftest import temp_test_file
+from conftest import temp_test_file
 
 
 def test_positive_required_fields(registration_page):
@@ -8,7 +8,6 @@ def test_positive_required_fields(registration_page):
     number = str(randint(9000000000, 9999999999))
     gender = "Male"
 
-    registration_page.open_mine_url()
     registration_page.close_banner()
     registration_page.input_first_name(first_name)
     registration_page.input_last_name(last_name)
@@ -41,7 +40,6 @@ def test_positive_all_fields(registration_page, temp_test_file):
     state_name = "Uttar Pradesh"
     city_name = "Lucknow"
 
-    registration_page.open_mine_url()
     registration_page.close_banner()
     registration_page.input_first_name(first_name)
     registration_page.input_last_name(last_name)
@@ -83,7 +81,6 @@ def test_negative_empty_first_name(registration_page):
     gender = "Male"
     error_message = "Please fill required fields and enter a valid 10-digit mobile number."
 
-    registration_page.open_mine_url()
     registration_page.close_banner()
     registration_page.input_first_name(first_name)
     registration_page.input_last_name(last_name)
@@ -103,7 +100,6 @@ def test_negative_empty_last_name(registration_page):
     gender = "Male"
     error_message = "Please fill required fields and enter a valid 10-digit mobile number."
 
-    registration_page.open_mine_url()
     registration_page.close_banner()
     registration_page.input_first_name(first_name)
     registration_page.input_last_name(last_name)
@@ -122,7 +118,6 @@ def test_negative_empty_gender(registration_page):
     number = str(randint(9000000000, 9999999999))
     error_message = "Please fill required fields and enter a valid 10-digit mobile number."
 
-    registration_page.open_mine_url()
     registration_page.close_banner()
     registration_page.input_first_name(first_name)
     registration_page.input_last_name(last_name)
@@ -140,7 +135,6 @@ def test_negative_empty_number(registration_page):
     gender = "Male"
     error_message = "Please fill required fields and enter a valid 10-digit mobile number."
 
-    registration_page.open_mine_url()
     registration_page.close_banner()
     registration_page.input_first_name(first_name)
     registration_page.input_last_name(last_name)

@@ -1,10 +1,9 @@
-from pages.base_page import BasePage
+from page_object.pages.base_page import BasePage
+from page_object.pages.elements.calendar import Calendar
 from selenium.webdriver.common.by import By
 
 
 class RegistrationPage(BasePage):
-    URL = "https://qa-guru.github.io/one-page-form/automation-practice-form.html"
-
     LAST_NAME = (By.CSS_SELECTOR, "#lastName")
     FIRST_NAME = (By.CSS_SELECTOR, "#firstName")
     CITY_INPUT = (By.CSS_SELECTOR, "#city")
@@ -39,8 +38,9 @@ class RegistrationPage(BasePage):
     MONS_SELECT = (By.CSS_SELECTOR, "select[class='react-datepicker__month-select']")
     CALENDAR_AREA = (By.CSS_SELECTOR, "div[class='react-datepicker__month-container']")
 
-    def open_mine_url(self):
-        self.open_url(self.URL)
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.calendar = Calendar(driver)
 
     def close_banner(self):
         """Закрыть баннер"""

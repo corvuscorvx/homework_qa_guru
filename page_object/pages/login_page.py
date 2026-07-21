@@ -1,18 +1,13 @@
-from pages.base_page import BasePage
+from page_object.pages.base_page import BasePage
 from selenium.webdriver.common.by import By
 
 
 class LoginPage(BasePage):
-    URL = "https://qa-guru.github.io/one-page-form/login.html"
-
     LOGIN = (By.CSS_SELECTOR, "#login-input")
     PASSWORD = (By.CSS_SELECTOR, "#password-input")
     LOGIN_BUTTON = (By.CSS_SELECTOR, "#submit-button")
 
     ERROR_MESSAGE = (By.CSS_SELECTOR, "#error-message")
-
-    def open_mine_url(self):
-        self.open_url(self.URL)
 
     def input_login(self, login: str):
         self.input_text(self.LOGIN, login)
