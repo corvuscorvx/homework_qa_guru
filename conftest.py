@@ -5,6 +5,7 @@ from page_object.pages.login_page import LoginPage
 from page_object.pages.text_box_page import TextBoxPage
 from page_object.pages.registration_page import RegistrationPage
 from page_factory.pages_factory.login_page_factory import LoginPageFactory
+from page_factory.pages_factory.text_box_page_factory import TextBoxPageFactory
 
 
 @pytest.fixture(scope="function")
@@ -32,6 +33,11 @@ def login_page_factory(driver):
 def text_box_page(driver):
     driver.get("https://qa-guru.github.io/one-page-form/text-box.html")
     return TextBoxPage(driver)
+
+@pytest.fixture(scope="function")
+def text_box_page_factory(driver):
+    driver.get("https://qa-guru.github.io/one-page-form/text-box.html")
+    return TextBoxPageFactory(driver)
 
 
 @pytest.fixture(scope="function")
