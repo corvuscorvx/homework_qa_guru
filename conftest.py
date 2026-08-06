@@ -1,11 +1,13 @@
 import os
 import pytest
 from selenium import webdriver
+
 from page_object.pages.login_page import LoginPage
 from page_object.pages.text_box_page import TextBoxPage
 from page_object.pages.registration_page import RegistrationPage
 from page_factory.pages_factory.login_page_factory import LoginPageFactory
 from page_factory.pages_factory.text_box_page_factory import TextBoxPageFactory
+from page_factory.pages_factory.registration_page_factory import RegistrationPageFactory
 
 
 @pytest.fixture(scope="function")
@@ -34,6 +36,7 @@ def text_box_page(driver):
     driver.get("https://qa-guru.github.io/one-page-form/text-box.html")
     return TextBoxPage(driver)
 
+
 @pytest.fixture(scope="function")
 def text_box_page_factory(driver):
     driver.get("https://qa-guru.github.io/one-page-form/text-box.html")
@@ -44,6 +47,12 @@ def text_box_page_factory(driver):
 def registration_page(driver):
     driver.get("https://qa-guru.github.io/one-page-form/automation-practice-form.html")
     return RegistrationPage(driver)
+
+
+@pytest.fixture(scope="function")
+def registration_page_factory(driver):
+    driver.get("https://qa-guru.github.io/one-page-form/automation-practice-form.html")
+    return RegistrationPageFactory(driver)
 
 
 @pytest.fixture(scope="function")
