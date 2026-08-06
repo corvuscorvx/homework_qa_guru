@@ -13,27 +13,27 @@ class RegistrationPageFactory(PageFactory):
         super().__init__()
         self.calendar = Calendar(driver)
         self.locators = {
-            "first_name_input": ("CSS", "#firstName"),
-            "last_name_input": ("CSS", "#lastName"),
-            "email_input": ("CSS", "#userEmail"),
-            "gender_male_radio": ("CSS", "label[for='gender-radio-1']"),
-            "gender_female_radio": ("CSS", "label[for='gender-radio-2']"),
-            "gender_other_radio": ("CSS", "label[for='gender-radio-3']"),
-            "number_input": ("CSS", "#userNumber"),
-            "date_of_birth_input": ("CSS", "#dateOfBirthInput"),
-            "subjects_input": ("CSS", "#subjectsInput"),
-            "hobby_sports_checkbox": ("CSS", "label[for='hobbies-checkbox-1']"),
-            "hobby_music_checkbox": ("CSS", "label[for='hobbies-checkbox-3']"),
-            "hobby_reading_checkbox": ("CSS", "label[for='hobbies-checkbox-2']"),
             "file_input": ("CSS", "#uploadPicture"),
-            "current_address_input": ("CSS", "#currentAddress"),
-            "state_dropdown": ("CSS", "#stateCity-wrapper"),
-            "state_input": ("CSS", "#state"),
             "city_input": ("CSS", "#city"),
+            "state_input": ("CSS", "#state"),
+            "email_input": ("CSS", "#userEmail"),
+            "number_input": ("CSS", "#userNumber"),
+            "submit_button": ("CSS", "#submit"),
             "city_dropdown": ("CSS", "#stateCity-wrapper"),
+            "state_dropdown": ("CSS", "#stateCity-wrapper"),
+            "subjects_input": ("CSS", "#subjectsInput"),
+            "last_name_input": ("CSS", "#lastName"),
+            "first_name_input": ("CSS", "#firstName"),
+            "gender_male_radio": ("CSS", "label[for='gender-radio-1']"),
+            "gender_other_radio": ("CSS", "label[for='gender-radio-3']"),
             "error_message_area": ("CSS", "#formError"),
+            "gender_female_radio": ("CSS", "label[for='gender-radio-2']"),
+            "date_of_birth_input": ("CSS", "#dateOfBirthInput"),
             "modal_dialog_result": ("CSS", "#resultBody"),
-            "submit_button": ("CSS", "#submit")
+            "hobby_music_checkbox": ("CSS", "label[for='hobbies-checkbox-3']"),
+            "current_address_input": ("CSS", "#currentAddress"),
+            "hobby_sports_checkbox": ("CSS", "label[for='hobbies-checkbox-1']"),
+            "hobby_reading_checkbox": ("CSS", "label[for='hobbies-checkbox-2']")
         }
 
     def close_banner(self):
