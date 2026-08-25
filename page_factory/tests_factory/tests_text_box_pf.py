@@ -1,6 +1,11 @@
 import pytest
+import allure
 
-
+@allure.epic("Веб-форма")
+@allure.feature("Отправка формы")
+@allure.story("Успешная отправка заполненных полей")
+@allure.title("Позитивный сценарий")
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("full_name, email, current_address, permanent_address", [
     ("Polnoe Imya", "Pochta@mail.ru", "Ulica, dom 8, kV.99", "Apteca, ulica, fonar"),
     ("Ю Я", "a@b.ru", "1", "2")
@@ -20,7 +25,11 @@ def test_positive_data(text_box_page_factory, full_name, email, current_address,
     assert output["current_address"] == current_address.strip()
     assert output["permanent_address"] == permanent_address.strip()
 
-
+@allure.epic("Веб-форма")
+@allure.feature("Отправка формы")
+@allure.story("Успешная отправка частично заполненных полей")
+@allure.title("Позитивный сценарий")
+@allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.parametrize("full_name, email, current_address, permanent_address", [
     ("Poln Im", "", "", ""),
     ("", "milo@qa.guru", "", ""),
@@ -42,7 +51,11 @@ def test_positive_partial_data(text_box_page_factory, full_name, email, current_
     assert output["current_address"] == current_address.strip()
     assert output["permanent_address"] == permanent_address.strip()
 
-
+@allure.epic("Веб-форма")
+@allure.feature("Отправка формы")
+@allure.story("Блокировка некорректного email")
+@allure.title("Негативный сценарий")
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("invalid_email", [
     "emailnotsobaka",
     "email@@qa.guru",
